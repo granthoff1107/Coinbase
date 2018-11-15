@@ -1,3 +1,4 @@
+using Coinbase.Models;
 using System;
 
 namespace Coinbase
@@ -8,7 +9,7 @@ namespace Coinbase
       {
       }
 
-      public string ApiUrl { get; set; } = CoinbaseApiBase.Endpoint;
+      public string ApiUrl { get; set; } = CoinbaseConsts.Endpoint;
       public bool UseTimeApi { get; set; } = true;
 
       internal virtual void EnsureValid()

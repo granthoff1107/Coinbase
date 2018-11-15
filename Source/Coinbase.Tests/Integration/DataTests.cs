@@ -11,18 +11,18 @@ namespace Coinbase.Tests.Integration
 {
    public class DataTests 
    {
-      private CoinbaseApiBase client;
+      private PublicCoinbaseClient client;
 
       [SetUp]
       public void BeforeEachTest()
       {
-         client = new PublicCoinbaseApi();
+         client = new PublicCoinbaseClient();
       }
 
       [Test]
       public async Task can_get_currencies()
       {
-         var r = await client.Data.GetCurrenciesAsync();
+         var r = await client.Currencies.GetCurrenciesAsync();
          var usd = r.Data.Where(c => c.Id == "USD").First();
          usd.Name.Should().StartWith("United States");
       }
@@ -30,7 +30,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task can_get_exchange_rates()
       {
-         var r = await client.Data.GetExchangeRatesAsync("ETH");
+         var r = await client.ExchangeRates.GetExchangeRatesAsync("ETH");
          r.Data.Currency.Should().Be("ETH");
          r.Data.Rates["USD"].Should().BeGreaterThan(5);
       }
@@ -38,7 +38,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task can_get_buyprice()
       {
-         var r = await client.Data.GetBuyPriceAsync("ETH-USD");
+         var r = await client.Prices.GetBuyPriceAsync("ETH-USD");
          r.Dump();
          r.Data.Amount.Should().BeGreaterThan(5);
          r.Data.Currency.Should().Be("USD");
@@ -47,7 +47,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task can_get_sellprice()
       {
-         var r = await client.Data.GetSellPriceAsync("ETH-USD");
+         var r = await client.Prices.GetSellPriceAsync("ETH-USD");
          r.Dump();
          r.Data.Amount.Should().BeGreaterThan(5);
          r.Data.Currency.Should().Be("USD");
@@ -56,7 +56,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task can_get_spotprice()
       {
-         var r = await client.Data.GetSpotPriceAsync("ETH-USD");
+         var r = await client.Prices.GetSpotPriceAsync("ETH-USD");
          r.Dump();
          r.Data.Amount.Should().BeGreaterThan(5);
          r.Data.Currency.Should().Be("USD");
@@ -66,7 +66,7 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task can_get_time()
       {
-         var r = await client.Data.GetCurrentTimeAsync();
+         var r = await client.Time.GetCurrentTimeAsync();
          r.Dump();
          r.Data.Iso.Should().BeCloseTo(DateTimeOffset.UtcNow, TimeSpan.FromHours(1));
       }

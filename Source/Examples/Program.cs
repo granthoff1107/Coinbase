@@ -12,17 +12,9 @@ namespace Examples
       static async Task Main(string[] args)
       {
          Console.WriteLine("Hello World!");
-         var client = new PublicCoinbaseApi();
+         var client = new PublicCoinbaseClient();
 
-         var create = new CreateTransaction
-            {
-               Amount = 1.0m,
-               Currency = "BTC"
-            };
-         var response = await client
-            .WithHeader(TwoFactorToken, "ffff")
-            .AllowAnyHttpStatus()
-            .Transactions.SendMoneyAsync("accountId", create);
+         var response = await client.ExchangeRates.GetExchangeRatesAsync();
 
          if( response.HasError() )
          {

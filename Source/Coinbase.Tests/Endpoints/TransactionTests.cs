@@ -15,7 +15,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerPagedResponse(PaginationJson, $"{Transaction2},{Transaction3},{Transaction4},{Transaction5}");
 
-         var r = await client.Transactions.ListTransactionsAsync("fff");
+         var r = await client.Accounts.ChildOf("fff").Transactions.GetListAsync();
 
          var truth = new PagedResponse<Transaction>
             {
@@ -40,7 +40,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Transaction5);
 
-         var r = await client.Transactions.GetTransactionAsync("fff", "uuu");
+         var r = await client.Accounts.ChildOf("fff").Transactions.GetAsync("uuu");
 
          var truth = new Response<Transaction>
          {
@@ -68,7 +68,7 @@ namespace Coinbase.Tests.Endpoints
                Currency = "BTC",
                Idem = "9316dd16-0c05"
          };
-         var r = await client.Transactions.SendMoneyAsync("fff", createTx );
+         var r = await client.Accounts.ChildOf("fff").Transactions.SendMoneyAsync(createTx );
 
          var truth = new Response<Transaction>
          {
@@ -96,7 +96,7 @@ namespace Coinbase.Tests.Endpoints
                Amount = 0.1m,
                Currency = "BTC"
             };
-         var r = await client.Transactions.TransferMoneyAsync("fff", createTx);
+         var r = await client.Accounts.ChildOf("fff").Transactions.TransferMoneyAsync(createTx);
 
          var truth = new Response<Transaction>
             {
@@ -124,7 +124,7 @@ namespace Coinbase.Tests.Endpoints
                Amount = 0.1m,
                Currency = "BTC"
             };
-         var r = await client.Transactions.RequestMoneyAsync("fff", create);
+         var r = await client.Accounts.ChildOf("fff").Transactions.RequestMoneyAsync(create);
 
          var truth = new Response<Transaction>
             {
@@ -142,7 +142,7 @@ namespace Coinbase.Tests.Endpoints
       [Test]
       public async Task can_compelte()
       {
-         var r = await client.Transactions.CompleteRequestMoneyAsync("fff", "uuu");
+         var r = await client.Accounts.ChildOf("fff").Transactions.CompleteRequestMoneyAsync("uuu");
 
          server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/fff/transactions/uuu/complete")
             .WithVerb(HttpMethod.Post);
@@ -152,7 +152,7 @@ namespace Coinbase.Tests.Endpoints
       [Test]
       public async Task can_resend()
       {
-         var r = await client.Transactions.ResendRequestMoneyAsync("fff", "uuu");
+         var r = await client.Accounts.ChildOf("fff").Transactions.ResendRequestMoneyAsync("uuu");
 
          server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/fff/transactions/uuu/resend")
             .WithVerb(HttpMethod.Post);
@@ -162,7 +162,7 @@ namespace Coinbase.Tests.Endpoints
       [Test]
       public async Task can_cancel()
       {
-         var r = await client.Transactions.CancelRequestMoneyAsync("fff", "uuu");
+         var r = await client.Accounts.ChildOf("fff").Transactions.CancelRequestMoneyAsync("uuu");
 
          server.ShouldHaveExactCall("https://api.coinbase.com/v2/accounts/fff/transactions/uuu")
             .WithVerb(HttpMethod.Delete);

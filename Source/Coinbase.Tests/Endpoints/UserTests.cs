@@ -69,7 +69,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Examples.UserWithNameChange("bbb ccc"));
 
-         var user = await client.Users.UpdateUserAsync(new UserUpdate{ Name = "bbb ccc"});
+         var user = await client.Users.UpdateAsync(new UserUpdate{ Name = "bbb ccc"});
 
          var truth = new Response<User>
             {

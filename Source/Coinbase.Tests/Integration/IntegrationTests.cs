@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Coinbase.Models;
 using Flurl.Http;
 using NUnit.Framework;
 using Z.ExtensionMethods;
@@ -11,7 +12,7 @@ namespace Coinbase.Tests.Integration
    [Explicit]
    public class IntegrationTests
    {
-      protected CoinbaseApiBase client;
+      protected ICoinbaseClient client;
 
       public IntegrationTests()
       {
@@ -27,7 +28,7 @@ namespace Coinbase.Tests.Integration
                settings.HttpClientFactory = new ProxyFactory(webProxy);
             });
 
-         client = new CoinbaseApi(new ApiKeyConfig{ ApiKey = apiKey, ApiSecret = apiSecret});
+         client = new CoinbaseApiClient(new ApiKeyConfig{ ApiKey = apiKey, ApiSecret = apiSecret});
       }
    }
    [Explicit]
@@ -43,14 +44,14 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task check_account_list()
       {
-         var r = await client.Accounts.ListAccountsAsync();
+         var r = await client.Accounts.GetListAsync();
          r.Dump();
       }
 
       [Test]
       public async Task check_account_transactions()
       {
-         var r = await client.Transactions.ListTransactionsAsync("fff");
+         var r = await client.Accounts.ChildOf("fff").Transactions.GetListAsync();
 
          r.Dump();
       }
@@ -58,18 +59,18 @@ namespace Coinbase.Tests.Integration
       [Test]
       public async Task check_invalid_account()
       {
-         var r = await client.Accounts.GetAccountAsync("fff");
+         var r = await client.Accounts.GetAsync("fff");
          r.Dump();
       }
 
       [Test]
       public async Task test_state()
       {
-         var accounts = await client.Accounts.ListAccountsAsync();
+         var accounts = await client.Accounts.GetListAsync();
          var ethAccount = accounts.Data.FirstOrDefault(x => x.Name == "ETH Wallet");
-         var ethAddresses = await client.Addresses.ListAddressesAsync(ethAccount.Id);
+         var ethAddresses = await client.Accounts.ChildOf(ethAccount.Id).Addresses.GetListAsync();
          var ethAddress = ethAddresses.Data.FirstOrDefault();
-         var ethTransactions = await client.Transactions.ListTransactionsAsync(ethAccount.Id);
+         var ethTransactions = await client.Accounts.ChildOf(ethAccount.Id).Transactions.GetListAsync();
       }
    }
 }

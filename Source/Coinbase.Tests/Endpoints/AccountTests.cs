@@ -15,7 +15,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerPagedResponse(PaginationJson, $"{Account1},{Account2}");
 
-         var accounts = await client.Accounts.ListAccountsAsync();
+         var accounts = await client.Accounts.GetListAsync();
 
          var truth = new PagedResponse<Account>
             {
@@ -34,7 +34,7 @@ namespace Coinbase.Tests.Endpoints
       {
          SetupServerSingleResponse(Account2);
 
-         var account = await client.Accounts.GetAccountAsync(Account2Model.Id);
+         var account = await client.Accounts.GetAsync(Account2Model.Id);
 
          var truth = new Response<Account>
             {
@@ -71,7 +71,7 @@ namespace Coinbase.Tests.Endpoints
          SetupServerSingleResponse(Account3WithNameChange("New account name"));
 
          var update = new UpdateAccount {Name = "New account name"};
-         var account = await client.Accounts.UpdateAccountAsync(Account3Model.Id, update);
+         var account = await client.Accounts.UpdateAsync(Account3Model.Id, update);
 
          var truth = new Response<Account>
             {
@@ -89,7 +89,7 @@ namespace Coinbase.Tests.Endpoints
       public async Task can_delete_account()
       {
          server.RespondWith(status: 204);
-         var r = await client.Accounts.DeleteAccountAsync("ffff");
+         var r = await client.Accounts.DeleteAsync("ffff");
 
          r.StatusCode.Should().Be(HttpStatusCode.NoContent);
 

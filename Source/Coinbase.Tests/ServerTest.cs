@@ -1,4 +1,5 @@
-﻿using Flurl.Http.Testing;
+﻿using Coinbase.Models;
+using Flurl.Http.Testing;
 using NUnit.Framework;
 
 namespace Coinbase.Tests
@@ -44,14 +45,14 @@ namespace Coinbase.Tests
 
    public class OAuthServerTest : ServerTest
    {
-      protected CoinbaseApiBase client;
+      protected ICoinbaseClient client;
 
       public string oauthKey = "369ECD3F-2D00-4D7A-ACDB-92C2DC35A878";
 
       [SetUp]
       public void BeforeEachTest()
       {
-         client = new CoinbaseOAuthApi(new OAuthConfig{OAuthToken = oauthKey});
+         client = new CoinbaseOAuthClient(new OAuthConfig{OAuthToken = oauthKey});
       }
 
       [TearDown]
@@ -63,8 +64,8 @@ namespace Coinbase.Tests
       private void EnsureEveryRequestHasCorrectHeaders()
       {
          server.ShouldHaveMadeACall()
-            .WithHeader(HeaderNames.Version, CoinbaseApiBase.ApiVersionDate)
-            .WithHeader("User-Agent", CoinbaseApiBase.UserAgent)
+            .WithHeader(HeaderNames.Version, CoinbaseConsts.ApiVersionDate)
+            .WithHeader("User-Agent", CoinbaseConsts.UserAgent)
             .WithHeader("Authorization", $"Bearer {oauthKey}");
       }
    }
